@@ -68,9 +68,9 @@ module Match
         def execute_request(url, request)
           request[authentication_key] = authentication_value
 
-          Net::HTTP.start(url.host, url.port) do |http|
-            http.request(request)
-          end
+          http = Net::HTTP.new(url.host, url.port)
+          http.use_ssl = url.instance_of?(URI::HTTPS)
+          http.request(request)
         end
       end
     end
