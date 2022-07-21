@@ -27,7 +27,9 @@ module FastlaneCore
       available = list_available_identities(in_keychain: in_keychain)
       # Match for this text against word boundaries to avoid edge cases around multiples of 10 identities!
       if /\b0 valid identities found\b/ =~ available
-        UI.error([
+        message_type = ENV['CI'] ? 'important' : 'error'
+
+        UI.send(message_type.to_sym, [
           "There are no local code signing identities found.",
           "You can run" << " `security find-identity -v -p codesigning #{in_keychain}".rstrip << "` to get this output.",
           "This Stack Overflow thread has more information: https://stackoverflow.com/q/35390072/774.",
